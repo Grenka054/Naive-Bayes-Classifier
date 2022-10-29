@@ -6,29 +6,23 @@ spam_let = 0
 dictionary = dict()
 
 
-def is_spam(words):  # P(спам|{′купите′, ′наш′,′товар′})
-    res_p = math.log(spam_let / all_let)
-    res_q = math.log(get_num_all_no_spam_letters() / all_let)
-    for word in words:
-        res_p += math.log(word_is_spam(get_num_letters_with_word(word, 1), spam_let))
-        res_q += math.log(word_is_spam(get_num_letters_with_word(word, 0), spam_let))
-    return res_p > res_q
-
-
-def word_is_spam(num_spam_letters_with_word, num_all_spam_letters=all_let):  # P({′купите′}|спам) or P({′купите′}|не спам)
+# P({′купите′}|спам) = # (спам–писем со словом ’купите’ + 1) / (спам–писем + 2)
+# P({′купите′}|не спам) = # (спам–писем без слова ’купите’ + 1) / (спам–писем + 2)
+def word_is_spam(num_spam_letters_with_word, num_all_spam_letters=all_let):
     return (num_spam_letters_with_word + 1) / (num_all_spam_letters + 2)
 
 
-# spam=1 - спам–писем со словом word, spam=0 - спам-писем без слова word
-def get_num_letters_with_word(word, spam=0):  # спам–писем со словом ’купите’
-    list = dictionary.get(word)
-    if list is None:
-        return 1
-    return list[spam]
-
-
-def get_num_all_no_spam_letters():  # не спам–писем
-    return all_let - spam_let
+# log(P(спам)) + ∑log(P(𝑤𝑘|спам)) > log(P(не спам)) + ∑log(P(𝑤𝑘|не спам))
+def is_spam(words):
+    res_p = math.log(spam_let / all_let)
+    res_q = math.log((all_let - spam_let) / all_let)
+    for word in words:
+        list = dictionary.get(word)
+        if list is None:
+            list = [1, 1]
+        res_p += math.log(word_is_spam(list[1], spam_let))
+        res_q += math.log(word_is_spam(list[0], spam_let))
+    return res_p > res_q
 
 
 def learn():
