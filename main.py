@@ -51,7 +51,7 @@ def is_spam(words):
 
 def learn():
     """
-    Learn classifier
+    Learn classificator
     """
     global spam_mails, all_mails
     with open('learnCollection.txt', 'r', encoding='utf-8') as inp_file:

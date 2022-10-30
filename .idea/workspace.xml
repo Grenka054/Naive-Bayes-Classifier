@@ -31,7 +31,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/Documents/GitHub/Naive-Bayes-Classifier",
+    "last_opened_file_path": "D:/Documents/GitHub/Naive-Bayes-Classifier/venv",
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>
@@ -72,7 +72,8 @@
       <workItem from="1666975654800" duration="2606000" />
       <workItem from="1667038653061" duration="27618000" />
       <workItem from="1667116450932" duration="139000" />
-      <workItem from="1667117921637" duration="5344000" />
+      <workItem from="1667117921637" duration="5940000" />
+      <workItem from="1667145676977" duration="481000" />
     </task>
     <servers />
   </component>
