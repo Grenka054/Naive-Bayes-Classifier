@@ -6,8 +6,8 @@ spam_mails = 0
 dictionary = dict()
 
 
-# P({′купите′}|спам) = # (спам–писем со словом ’купите’ + 1) / (спам–писем + 2)
-# P({′купите′}|не спам) = # (спам–писем без слова ’купите’ + 1) / (спам–писем + 2)
+# P({′купите′}|спам) = # (спам–писем со словом ’купите’ + 1) / (писем со словом ’купите’ 2)
+# P({′купите′}|не спам) = # (спам–писем без слова ’купите’ + 1) / (писем со словом ’купите’ + 2)
 def p_word_is_spam(num_spam_mails_with_word, num_all_spam_mails):
     """
     Determines probability that the word is spam
@@ -44,8 +44,8 @@ def is_spam(words):
         list = dictionary.get(word)
         if list is None:
             list = [1, 1]
-        res_p += math.log(p_word_is_spam(list[1], spam_mails))
-        res_q += math.log(p_word_is_spam(list[0], spam_mails))
+        res_p += math.log(p_word_is_spam(list[1], sum(list)))
+        res_q += math.log(p_word_is_spam(list[0], sum(list)))
     return res_p > res_q
 
 
@@ -61,7 +61,7 @@ def learn():
         if mails[i] == "":
             break
         tab = mails[i].split('\t', 1)
-        words = set(re.findall(r'[A-Za-zÀ-ÿ0-9_&]+', tab[1].lower()))
+        words = set(re.findall(r'[a-zà-ÿ0-9_&]+', tab[1].lower()))
         if tab[0] != 'ham':
             spam_mails += 1
         for word in words:
@@ -91,7 +91,7 @@ def get_accuracy():
     for i in range(len(mails)):
         mail_is_spam(mails[i])
         tab = mails[i].split('\t', 1)
-        words = set(re.findall(r'[A-Za-zÀ-ÿ0-9_&\']+', tab[1].lower()))
+        words = set(re.findall(r'[а-яa-zà-ÿ0-9_&\']+', tab[1].lower()))
         if is_spam(words) == (tab[0] != 'ham'):
             well_amount += 1
     return well_amount / len(mails)
@@ -109,10 +109,12 @@ def mail_is_spam(mail):
     is_spam(words) : bool
         The email is spam
     """
-    words = set(re.findall(r'[A-Za-zÀ-ÿ0-9_&\']+', mail.lower()))
+    words = set(re.findall(r'[а-яa-zÀ-ÿ0-9_&\']+', mail.lower()))
     return is_spam(words)
 
 
 learn()
 print(f"Точность {round(get_accuracy() * 100, 2)}%")
-print(mail_is_spam("Thanks for the Vote. Now sing along with the stars with Karaoke on your mobile. For a FREE link just reply with SING now."))
+print(mail_is_spam("Had your contract mobile 11 Mnths? Latest Motorola, Nokia etc. all FREE! Double Mins & Text on "
+                   "Orange tariffs. TEXT YES for callback, no to remove from records."))
+
